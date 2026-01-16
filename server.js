@@ -1,7 +1,7 @@
-import fastify from 'fastify';
+import Fastify from 'fastify';
 import Redis from 'ioredis';
 
-const app = fastify({ logger: false });
+const app = Fastify({ logger: false });
 
 // Conexión a Dragonfly (mismo protocolo que Redis)
 const redis = new Redis({
