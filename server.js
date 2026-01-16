@@ -1,7 +1,7 @@
-const fastify = require('fastify')({ 
-  logger: false // CRÍTICO: Logs desactivados para ahorrar CPU/IO
-});
-const Redis = require('ioredis');
+import fastify from 'fastify';
+import Redis from 'ioredis';
+
+const app = fastify({ logger: false });
 
 // Conexión a Dragonfly (mismo protocolo que Redis)
 const redis = new Redis({
@@ -13,7 +13,7 @@ const redis = new Redis({
 
 // 1. Endpoint: Semilla (Crear datos de prueba)
 // Simula cargar productos en caché
-fastify.get('/seed', async (request, reply) => {
+app.get('/seed', async (request, reply) => {
   const pipeline = redis.pipeline();
   for (let i = 0; i < 100; i++) {
     // Arquitectura Óptima: Hash para objetos
@@ -30,7 +30,7 @@ fastify.get('/seed', async (request, reply) => {
 
 // 2. Endpoint: Leer Producto (Simula carga de página de producto)
 // Lectura ligera
-fastify.get('/product/:id', async (request, reply) => {
+app.get('/product/:id', async (request, reply) => {
   const { id } = request.params;
   const product = await redis.hgetall(`product:${id}`);
   
@@ -43,7 +43,7 @@ fastify.get('/product/:id', async (request, reply) => {
 
 // 3. Endpoint: Añadir al Carrito (Simula escritura/transacción)
 // Escritura + Lógica simple
-fastify.post('/cart/:userId', async (request, reply) => {
+app.post('/cart/:userId', async (request, reply) => {
   const { userId } = request.params;
   const { productId, qty } = request.body || { productId: 1, qty: 1 };
 
@@ -57,11 +57,11 @@ fastify.post('/cart/:userId', async (request, reply) => {
 });
 
 // Healthcheck
-fastify.get('/', async () => ({ status: 'ok', engine: 'dragonfly' }));
+app.get('/', async () => ({ status: 'ok', engine: 'dragonfly' }));
 
 const start = async () => {
   try {
-    await fastify.listen({ port: 3000, host: '0.0.0.0' });
+    await app.listen({ port: 3000, host: '0.0.0.0' });
     console.log('Servidor corriendo en puerto 3000');
   } catch (err) {
     console.error(err);
