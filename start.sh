@@ -1,13 +1,13 @@
 #!/bin/bash
-echo "--- Iniciando Modo Supervivencia (Redis) ---"
+set -e
 
-# Iniciamos Redis en modo demonio (background)
-# maxmemory 50mb: Vital para dejar espacio a Node.js
-redis-server --daemonize yes --maxmemory 50mb --maxmemory-policy allkeys-lru
+echo "--- ARRANCANDO DRAGONFLY + FASTIFY ---"
 
-# Esperamos un poco
-sleep 2
+# Iniciar Dragonfly limitado a 64MB (Vital para tu VPS de 250MB)
+/usr/local/bin/dragonfly --maxmemory=64mb --cache_mode=true --bind localhost &
 
-# Iniciamos Node
+echo "Esperando a Dragonfly..."
+sleep 3
+
 echo "Iniciando Fastify..."
 exec node server.js
