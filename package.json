@@ -1,0 +1,21 @@
+{
+  "name": "livelula",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bridevmx/livelula.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bridevmx/livelula/issues"
+  },
+  "homepage": "https://github.com/bridevmx/livelula#readme"
+}
